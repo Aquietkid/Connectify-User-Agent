@@ -1,0 +1,38 @@
+.bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px;
+  }
+  
+  .icon {
+    width: 20px;
+    height: 20px;
+    fill: lightgray;
+  }
+  
+  .center {
+    flex: 1;
+  }
+  
+  .input-wrapper {
+    display: flex;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 5px;
+    align-items: center;
+  }
+  
+  .emoji-icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+  }
+  
+  .input-field {
+    flex: 1;
+    border: none;
+    background-color: transparent;
+    outline: none;
+  }
