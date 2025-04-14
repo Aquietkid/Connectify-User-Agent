@@ -1,14 +1,44 @@
 import { useState } from "react"
 import archiveIcon from "/src/assets/sidebar/archive.svg"
+import archiveIconWhite from "/src/assets/sidebar/archive-white.svg"
+
 import chatIcon from "/src/assets/sidebar/chat.svg"
+import chatIconWhite from "/src/assets/sidebar/chat-white.svg"
+
 import statusIcon from "/src/assets/sidebar/status.svg"
+import statusIconWhite from "/src/assets/sidebar/status-white.svg"
+
 import settingsIcon from "/src/assets/sidebar/settings.svg"
+import settingsIconWhite from "/src/assets/sidebar/settings-white.svg"
+
 import logoutIcon from "/src/assets/sidebar/logout.svg"
+import logoutIconWhite from "/src/assets/sidebar/logout-white.svg"
+
 import Icon from "./Icon"
 
 import './Sidebar.css'
 
-const icons = [archiveIcon, chatIcon, statusIcon, settingsIcon, logoutIcon];
+const icons = [
+    {
+        default: archiveIcon,
+        selected: archiveIconWhite
+    },
+    {
+        default: chatIcon,
+        selected: chatIconWhite
+    },
+    {
+        default: statusIcon,
+        selected: statusIconWhite
+    }, {
+        default: settingsIcon,
+        selected: settingsIconWhite
+    },
+    {
+        default: logoutIcon,
+        selected: logoutIconWhite
+    }
+];
 
 /*
 * This split determines the 'breaking point' of the icons sitting in the center and bottom groups. 
