@@ -4,7 +4,7 @@ function ChatCard() {
 
     const [typing, setTyping] = useState(true);
     const [pinned, setPinned] = useState(true);
-    const [msgCount, setMsgCount] = useState(0);
+    const [msgCount, setMsgCount] = useState(1);
 
     return (
         <div className='flex flex-row items-start justify-start w-[100%] mt-5 ml-5 mr-5 h-12.5'>
@@ -29,7 +29,7 @@ function ChatCard() {
                     <p className=' text-[10px] text-nowrap justify-self-end'>09:50 PM</p>
                 </div>
                 {
-                    (msgCount > 0) ? <p className='flex bg-black rounded-full text-[10px] text-white w-5 h-5 items-center justify-center self-end'>{msgCount}</p> : <p></p>
+                    (msgCount > 0) ? <p className='flex bg-black rounded-full text-[10px] text-white w-5 h-5 items-center justify-center self-end'>{msgCount > 9 ? '9+' : msgCount}</p> : <p></p>
                 }
             </div>
         </div>
