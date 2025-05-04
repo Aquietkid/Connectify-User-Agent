@@ -5,8 +5,8 @@ import BottomBar from './bottombar'
 function MainWindow() {
     return (
         <div>
-            <TopBar />
-            <main id='rel' className="flex-1 grow p-5 border border-[#eaeaea] rounded-sm mt-9 ml-5 mr-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium ratione modi quos vitae, nesciunt asperiores qui ipsa quasi, maxime eius quisquam expedita eveniet iste dolorem, libero placeat eaque! Sapiente, non.
+            <TopBar contactName={"Captain America"} isTyping={true} />
+            <main id='rel' className="flex-1 grow p-5 border border-[#eaeaea] border-t-0 ml-5 mr-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium ratione modi quos vitae, nesciunt asperiores qui ipsa quasi, maxime eius quisquam expedita eveniet iste dolorem, libero placeat eaque! Sapiente, non.
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nulla, illo facere repellendus dolore sunt cumque nam voluptatem qui aliquam, voluptas ad laudantium in? Repudiandae cumque quis non repellendus minima quae!
                 Vitae laborum molestias aut dicta quidem eveniet nulla tempore labore quae sint officiis deleniti libero doloremque, cumque a blanditiis. Saepe a blanditiis incidunt assumenda nesciunt facilis atque aperiam obcaecati laborum.
                 Aliquam iste temporibus eligendi quas tempore totam enim animi quia sit non vero laboriosam, obcaecati mollitia et corrupti esse ipsum fuga accusantium ipsam ex distinctio! Obcaecati aspernatur blanditiis animi facere.
