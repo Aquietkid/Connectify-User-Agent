@@ -2,9 +2,24 @@ import React, { useState } from 'react'
 
 function ChatCard() {
 
-    const [typing, setTyping] = useState(true);
+    const [typing, setTyping] = useState(false);
+    const [lastMessage, setLastMessage] = useState('It\'s not worth it');
     const [pinned, setPinned] = useState(true);
     const [msgCount, setMsgCount] = useState(1);
+    const [ticks, setTicks] = useState(0);
+    const [messageType, setMessageType] = useState(''); // '' -> text; 'v' -> video; 'p' -> photo; 'a' -> audio
+
+    let messageIconSource = 'src\\assets\\';
+
+    if (messageType == 'v') {
+        messageIconSource += 'video.svg';
+    } else if (messageType == 'p') {
+        messageIconSource += 'photo.svg';
+    } else if (messageType == 'a') {
+        messageIconSource += 'audio.svg';
+    } else {
+        messageIconSource = null;
+    }
 
     return (
         <div className='flex flex-row items-start justify-start w-[100%] mt-5 ml-5 mr-5 h-12.5'>
@@ -16,7 +31,11 @@ function ChatCard() {
             <div className='flex flex-col ml-2.5 w-[60%]'>
                 <p className='font-bold text-xl text-ellipsis text-nowrap'>Captain America</p>
                 {
-                    typing ? <p className='text-[#4A9D4C]'>typing...</p> : <p className='text-xs text-[#b3b3b3]'>It's not worth it</p>
+                    typing ? <p className='text-[#4A9D4C]'>typing...</p> : <div className='flex flex-row'>
+                        {ticks > 0 ? <img src={'src\\assets\\tick-' + (ticks == 1 ? 'single.svg' : 'double.svg')} alt='' className='w-3 mr-1'></img> : <></>}
+                        <img src={messageIconSource} alt="" className='mr-1' />
+                        <p className='text-xs text-[#B3B3B3]'>{lastMessage}</p>
+                    </div>
                 }
             </div>
 
