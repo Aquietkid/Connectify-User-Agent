@@ -1,28 +1,26 @@
-import './App.css';
-import NavSidebar from './components/NavSidebar';
-import Sidebar from './components/Sidebar';
-import ProfileComponent from './components/ProfileComponent';
+import './App.css'
+import ContactList from './components/ContactList'
+import MainWindow from './components/MainWindow'
+import NavSidebar from './components/NavSidebar'
+import Sidebar from './components/Sidebar'
 
 function App() {
+
   return (
-    <div className='flex h-screen w-full'>
-      {/* Left navigation sidebar */}
-      <NavSidebar />
-      
-      {/* Main content area with sidebar and profile */}
-      <div className='flex flex-1 overflow-hidden'>
-        {/* Contacts sidebar */}
-        <div className='w-96 border-r border-gray-200 overflow-y-auto'>
-          <Sidebar />
-        </div>
-        
-        {/* Profile content - takes all remaining space */}
-        <div className='flex-1 overflow-y-auto'>
-          <ProfileComponent isFriend={true} /> {/* Set isFriend based on your logic */}
+    <>
+      <div className='flex flex-row'>
+        <NavSidebar />
+        <div className="flex h-screen">
+          <div className="w-96 overflow-x-auto">
+            <Sidebar />
+          </div>
+          <div className="flex-1 overflow-x-auto">
+            <MainWindow />
+            <ProfileComponent isFriend={true} />
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    </>
+  )
 
 export default App;
