@@ -63,7 +63,6 @@ function ContactList() {
                 <ChatCard />
                 <ChatCard />
                 <ChatCard />
-            </div>
         </>
     )
 }

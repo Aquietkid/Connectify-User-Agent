@@ -16,11 +16,11 @@ function App() {
           </div>
           <div className="flex-1 overflow-x-auto">
             <MainWindow />
+            <ProfileComponent isFriend={true} />
           </div>
         </div>
       </div>
     </>
   )
-}
 
-export default App
+export default App;
