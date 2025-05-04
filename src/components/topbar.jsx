@@ -1,7 +1,7 @@
 import React from 'react';
-import avatarImage from './avatar.svg'; 
-import searchIcon from './search.svg'; 
-import infoIcon from './info.svg'; 
+import searchIcon from '/src/assets/search-glass.svg'; 
+import avatarImage from '/src/assets/topbar/avatarImage.svg'; 
+import infoIcon from '/src/assets/topbar/info.svg'; 
 import './TopBar.css'; 
 
 const TopBar = ({ contactName, isTyping }) => {

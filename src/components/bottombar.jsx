@@ -1,7 +1,7 @@
 import React from 'react';
-import mediaIcon from './media.svg'; 
-import emojiIcon from './emoji.svg'; 
-import microphoneIcon from './microphone.svg'; 
+import mediaIcon from '/src/assets/bottombar/media.svg'; 
+import emojiIcon from '/src/assets/bottombar/emoji.svg'; 
+import microphoneIcon from '/src/assets/bottombar/microphone.svg'; 
 import './BottomBar.css'; 
 
 const BottomBar = () => {
