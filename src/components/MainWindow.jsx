@@ -1,9 +1,12 @@
 import React from 'react'
+import TopBar from './topbar'
+import BottomBar from './bottombar'
 
 function MainWindow() {
     return (
         <div>
-            <main id='rel' className="flex-1 grow p-5 border border-[#eaeaea] rounded-sm mt-9 ml-5 mr-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium ratione modi quos vitae, nesciunt asperiores qui ipsa quasi, maxime eius quisquam expedita eveniet iste dolorem, libero placeat eaque! Sapiente, non.
+            <TopBar contactName={"Captain America"} isTyping={true} />
+            <main id='rel' className="flex-1 grow p-5 border border-[#eaeaea] border-t-0 ml-5 mr-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium ratione modi quos vitae, nesciunt asperiores qui ipsa quasi, maxime eius quisquam expedita eveniet iste dolorem, libero placeat eaque! Sapiente, non.
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nulla, illo facere repellendus dolore sunt cumque nam voluptatem qui aliquam, voluptas ad laudantium in? Repudiandae cumque quis non repellendus minima quae!
                 Vitae laborum molestias aut dicta quidem eveniet nulla tempore labore quae sint officiis deleniti libero doloremque, cumque a blanditiis. Saepe a blanditiis incidunt assumenda nesciunt facilis atque aperiam obcaecati laborum.
                 Aliquam iste temporibus eligendi quas tempore totam enim animi quia sit non vero laboriosam, obcaecati mollitia et corrupti esse ipsum fuga accusantium ipsam ex distinctio! Obcaecati aspernatur blanditiis animi facere.
@@ -124,6 +127,7 @@ function MainWindow() {
                 Expedita, soluta, error consequatur quam ea praesentium iste totam necessitatibus voluptatibus adipisci deserunt corrupti nulla nisi. Quod fugiat at quas debitis sit necessitatibus, incidunt saepe, illum facere consectetur architecto perferendis!
                 Excepturi quasi tempora voluptatem. Nemo officiis eligendi voluptatibus voluptas delectus enim natus, error voluptatum cupiditate, corporis aliquam a ullam unde aperiam laudantium blanditiis, veniam aspernatur hic consequatur alias minima veritatis?
             </main>
+            <BottomBar />
         </div>
     )
 }

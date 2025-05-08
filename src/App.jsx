@@ -4,6 +4,8 @@ import MainWindow from './components/MainWindow'
 import NavSidebar from './components/NavSidebar'
 import Sidebar from './components/Sidebar'
 import ProfileComponent from './components/ProfileComponent'
+
+
 function App() {
 
   return (
