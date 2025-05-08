@@ -1,6 +1,6 @@
 import React from 'react'
-import TopBar from './topbar'
-import BottomBar from './bottombar'
+import TopBar from './TopBar'
+import BottomBar from './BottomBar'
 
 function MainWindow() {
     return (
