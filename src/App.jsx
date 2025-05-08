@@ -5,6 +5,7 @@ import NavSidebar from './components/NavSidebar'
 import Sidebar from './components/Sidebar'
 import ProfileComponent from './components/ProfileComponent'
 
+
 function App() {
 
   return (
@@ -16,7 +17,6 @@ function App() {
             <Sidebar />
           </div>
           <div className="flex-1 overflow-x-auto">
-            <MainWindow />
             <ProfileComponent isFriend={true} />
           </div>
         </div>

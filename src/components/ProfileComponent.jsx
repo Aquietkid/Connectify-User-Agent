@@ -33,11 +33,12 @@ function ProfileComponent({ isFriend }) {
     ];
 
     return (
-        <div className='flex-1 p-8'>
-            <div className='max-w-2xl mx-auto'>
+        <div className="w-full max-w-6xl mx-auto overflow-x-hidden mt-2 pl-12 pr-4">
+
+            <div className='max-w-full mx-auto'>
                 {/* User header section with larger image */}
-                <div className='flex items-center gap-6 mb-8 pt-12'>
-                    <div className='w-32 h-32 rounded-full bg-gray-300 overflow-hidden border-2 border-gray-200'>
+                <div className='flex items-center gap-8 mb-4 pt-4 relative'>
+                    <div className='w-40 h-40 rounded-full bg-gray-300 overflow-hidden border-2 border-gray-200'>
                         <img 
                             src='https://example.com/profile-image.jpg'
                             alt='Art the Clown'
@@ -45,15 +46,19 @@ function ProfileComponent({ isFriend }) {
                         />
                     </div>
                     <div>
-                        <h1 className='text-3xl font-bold'>Art the Clown</h1>
-                        <p className='text-lg text-gray-600'>Happy Halloween</p>
+                        <h1 className='text-5xl font'>Art the Clown</h1>
+                        <p className='text-xl text-gray-600'>Happy Halloween</p>
                     </div>
+
+                    {/* Added the joined date */}
+                    <p className='absolute bottom-0 right-0 text-sm text-gray-500 mb-2 mr-4'>Joined: Jan 1, 2020</p>
                 </div>
+
 
                 <div className='border-t border-gray-200 my-6'></div>
                 
                 {/* Action buttons */}
-                <div className='flex gap-4 mb-8'>
+                <div className='flex gap-4 mb-4'>
                     <button 
                         className='flex items-center gap-2 py-2 px-4 border border-gray-300 rounded-full hover:bg-gray-100 transition text-base'
                         onClick={toggleView}

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function ProfileFriendsComponent({ isMembersView }) {
+    const [expanded, setExpanded] = useState(false);
+    const toggleImages = () => setExpanded(prev => !prev);
     return (
-        <div className='mb-8'>
-            <h2 className='text-xl font-semibold mb-6'>
+        <div className='mb-3'>
+            <h2 className='text-2xl font-bold mb-3'>
                 {isMembersView ? 'Friends' : 'Members'}
             </h2>
-            <div className='flex gap-6 overflow-x-auto pb-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
                 {/* Friend/Member 1 */}
                 <div className='flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-[4px_4px_8px_0px_rgba(0,0,0,0.1)] text-center'>
                     <div className='flex flex-col items-center gap-4 mb-4'>
@@ -23,8 +25,8 @@ function ProfileFriendsComponent({ isMembersView }) {
                 </div>
 
                 {/* Friend/Member 2 */}
-                <div className='flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-[4px_4px_8px_0px_rgba(0,0,0,0.1)]'>
-                    <div className='flex items-center gap-4 mb-4'>
+                <div className='flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-[4px_4px_8px_0px_rgba(0,0,0,0.1)] text-center'>
+                    <div className='flex flex-col items-center gap-4 mb-4'>
                         <div className='w-16 h-16 rounded-full bg-gray-300 overflow-hidden shadow-md'>
                             <img 
                                 src='https://i.pravatar.cc/150?img=5' 
@@ -37,10 +39,9 @@ function ProfileFriendsComponent({ isMembersView }) {
                     <p className='text-gray-600'>black is on auction. hurry up and get the fastest ship</p>
                 </div>
 
-                {/* Friend/Member 3 - Only shown in Members view */}
-                {isMembersView && (
-                    <div className='flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-[4px_4px_8px_0px_rgba(0,0,0,0.1)]'>
-                        <div className='flex items-center gap-4 mb-4'>
+                 {isMembersView && (
+                    <div className='flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-[4px_4px_8px_0px_rgba(0,0,0,0.1)] text-center'>
+                        <div className='flex flex-col items-center gap-4 mb-4'>
                             <div className='w-16 h-16 rounded-full bg-gray-300 overflow-hidden shadow-md'>
                                 <img 
                                     src='https://i.pravatar.cc/150?img=7' 
@@ -55,12 +56,20 @@ function ProfileFriendsComponent({ isMembersView }) {
                 )}
 
                 {/* "See more" button in Members view */}
-                {isMembersView && (
-                    <div className='flex-shrink-0 w-80 p-6 bg-white rounded-xl shadow-[4px_4px_8px_0px_rgba(0,0,0,0.1)] flex items-center justify-center'>
-                        <button className='text-blue-500 font-medium'>see more</button>
-                    </div>
-                )}
+               
+
+
+                
             </div>
+            {isMembersView && (
+                    
+                    <button 
+                        onClick={toggleImages}
+                        className='ml-auto block px-4 py-1 mt-3 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition'
+                    >
+                        {expanded ? 'See Less' : 'See More'}
+                    </button>
+                )}
         </div>
     );
 }
