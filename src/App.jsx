@@ -1,5 +1,4 @@
 import './App.css'
-import ContactList from './components/ContactList'
 import MainWindow from './components/MainWindow'
 import NavSidebar from './components/NavSidebar'
 import Sidebar from './components/Sidebar'
@@ -19,7 +18,8 @@ function App() {
             <Sidebar />
           </div>
           <div className="flex-1 overflow-x-auto">
-            <ProfileComponent isFriend={true} />
+            <MainWindow />
+            {/* <ProfileComponent isFriend={true} /> */}
           </div>
         </div>
       </div>
