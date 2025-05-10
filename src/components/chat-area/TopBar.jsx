@@ -5,7 +5,7 @@ import infoIcon from '/src/assets/topbar/info.svg';
 
 const TopBar = ({ contactName, isTyping }) => {
   return (
-    <div className="relative mt-9 ml-5 mr-8">
+    <div className="relative">
       {/* Border behind the top bar */}
       <div className="absolute bottom-0 left-0 right-0 h-5 border-l border-r border-[#eaeaea] z-0" />
 
