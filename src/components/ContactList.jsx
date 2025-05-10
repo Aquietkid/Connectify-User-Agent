@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import ChatCard from './ChatCard'
-import api from '../axiosConfig'
+// import api from '../axiosConfig'
 
 function ContactList() {
 
-    useEffect(() => {
-        api.get('chat')
-        .then((res) => console.log(res))
-        .catch(err => console.log(err));
-    }, []);
+    // useEffect(() => {
+    //     api.get('chat')
+    //     .then((res) => console.log(res))
+    //     .catch(err => console.log(err));
+    // }, []);
 
     return (
         <>

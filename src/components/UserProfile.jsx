@@ -1,11 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 function UserProfile() {
     const [isMembersView, setIsMembersView] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    
+    // Access the entire user state
+    const { user, isAuthenticated, accessToken, loading } = useSelector(state => state.user);
+
+    // Debug logging and state initialization
+    useEffect(() => {
+        console.log('=== Profile Component Debug ===');
+        console.log('User State:', user);
+        console.log('Is Authenticated:', isAuthenticated);
+        console.log('Access Token:', accessToken);
+        console.log('Loading State:', loading);
+        
+        // Check if we have the required data
+        if (user || !isAuthenticated) {
+            setIsLoading(false);
+        }
+    }, [user, isAuthenticated, accessToken, loading]);
 
     const toggleView = () => {
         setIsMembersView(!isMembersView);
     };
+
+    if (isLoading) {
+        return (
+            <div className='flex-1 p-8'>
+                <div className='max-w-2xl mx-auto'>
+                    <div className='animate-pulse'>
+                        <div className='h-32 w-32 bg-gray-200 rounded-full'></div>
+                        <div className='h-8 w-48 bg-gray-200 mt-4 rounded'></div>
+                        <div className='h-4 w-32 bg-gray-200 mt-2 rounded'></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Common groups datal
     const commonGroups = [
@@ -31,18 +64,28 @@ function UserProfile() {
     return (
         <div className='flex-1 p-8'>
             <div className='max-w-2xl mx-auto'>
+                {/* Debug Info Display */}
+                <div className='bg-gray-100 p-4 mb-4 rounded'>
+                    <h3 className='font-bold mb-2'>Redux State Debug:</h3>
+                    <pre className='text-sm'>
+                        {JSON.stringify({ user, isAuthenticated, accessToken, loading }, null, 2)}
+                    </pre>
+                </div>
+
                 {/* User header section with larger image */}
                 <div className='flex items-center gap-6 mb-8 pt-12'>
                     <div className='w-32 h-32 rounded-full bg-gray-300 overflow-hidden border-2 border-gray-200'>
                         <img 
-                            src='https://example.com/profile-image.jpg' // Replace with your image path
-                            alt='Art the Clown'
+                            src='https://example.com/profile-image.jpg'
+                            alt={user?.name || 'User'}
                             className='w-full h-full object-cover'
                         />
                     </div>
                     <div>
-                        <h1 className='text-3xl font-bold'>Art the Clown</h1>
-                        <p className='text-lg text-gray-600'>Happy Halloween</p>
+                        <h1 className='text-3xl font-bold'>{user?.name || 'No Name'}</h1>
+                        <p className='text-lg text-gray-600'>{user?.email || 'No email'}</p>
+                        <p className='text-sm text-gray-500'>Status: {isAuthenticated ? 'Authenticated' : 'Not Authenticated'}</p>
+                        <p className='text-sm text-gray-500'>Token: {accessToken ? 'Present' : 'Not Present'}</p>
                     </div>
                 </div>
 
