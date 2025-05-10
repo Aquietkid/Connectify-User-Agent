@@ -1,28 +1,23 @@
 import './App.css'
-import MainWindow from './components/MainWindow'
-import NavSidebar from './components/NavSidebar'
-import Sidebar from './components/Sidebar'
-import ProfileComponent from './components/ProfileComponent'
+
 import Auth from './components/Auth'
+import { BrowserRouter as Router, Routes, Route } from 'react-router'
+import Home from './components/Home'
+import _404Page from './components/_404Page'
 
 
 function App() {
 
   return (
     <>
-      <Auth />
-      <div className='flex flex-row'>
-        <NavSidebar />
-        <div className="flex h-screen">
-          <div className="w-96 overflow-x-auto">
-            <Sidebar />
-          </div>
-          <div className="flex-1 overflow-x-auto">
-            <MainWindow />
-            {/* <ProfileComponent isFriend={true} /> */}
-          </div>
-        </div>
-      </div>
+      <Router>
+        <Routes>
+          <Route path='/signin' element={<Auth />} />
+          <Route path='/signup' element={<Auth />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='*' element={<_404Page />} />
+        </Routes>
+      </Router>
     </>
   )
 }
