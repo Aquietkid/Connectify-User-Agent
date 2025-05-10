@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+  --color-placeholder: #B3B3B3;
+  --color-divider: #EAEAEA;
+}
