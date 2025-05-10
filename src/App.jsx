@@ -1,25 +1,25 @@
 import './App.css'
-
 import Auth from './components/Auth'
-import { BrowserRouter as Router, Routes, Route } from 'react-router'
 import Home from './components/Home'
 import _404Page from './components/_404Page'
-
+import PrivateRoute from './components/PrivateRoute'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 function App() {
-
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path='/signin' element={<Auth />} />
-          <Route path='/signup' element={<Auth />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='*' element={<_404Page />} />
-        </Routes>
-      </Router>
-    </>
+    <Router>
+      <Routes>
+        <Route path='/signin' element={<Auth />} />
+        <Route path='/signup' element={<Auth />} />
+        <Route path='/home' element={
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        } />
+        <Route path='*' element={<_404Page />} />
+      </Routes>
+    </Router>
   )
 }
 
-export default App;
+export default App
