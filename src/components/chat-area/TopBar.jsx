@@ -11,13 +11,24 @@ const TopBar = () => {
   const { isTyping } = useContext(ChatAreaContext);
   const { chat } = useSelector(state => state.mainWindow)
   const user = useSelector(state => state.user)
-  const chatMembers = chat.members;
+  const { activeUsers } = useSelector(state => state.activeUsers)
+  const chatMembers = chat.members; // only if there is group
 
   const subText = (() => {
     if (chat.type == 'group') {
       return chatMembers.map(item => item._id != user._id ? item.name : '')
     }
   })()
+
+  function checkOnline() {
+    if (chat.type == 'personal') {
+      // chat.userId will only be there if personal chat
+      if (activeUsers.includes(chat.userId)) {
+        return true;
+      }
+    }
+    return false
+  }
 
   return (
     <div className="relative">
@@ -27,7 +38,10 @@ const TopBar = () => {
       {/* Top bar */}
       <div className="flex justify-between items-center bg-white border border-[#eaeaea] rounded-[10px] p-2.5 h-20 relative z-10">
         <div className="flex items-center">
-          <img src={chat.avatar || PLACEHOLDER_AVATAR} alt="Avatar" className="w-[50px] h-[50px] rounded-full mr-2.5" />
+          <div className='relative'>
+            <img src={chat.avatar || PLACEHOLDER_AVATAR} alt="Avatar" className="w-[50px] h-[50px] rounded-full mr-2.5" />
+            {checkOnline() && <div className='bg-green-600 rounded-full w-2 aspect-square border border-white absolute left-1 bottom-1' />}
+          </div>
           <div className="flex flex-col">
             <span className="font-bold">{chat.name}</span>
             {isTyping && <span className="text-green-600 text-xs">Typing...</span>}
