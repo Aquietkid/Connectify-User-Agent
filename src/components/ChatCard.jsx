@@ -8,23 +8,27 @@ import { SlPicture } from 'react-icons/sl';
 import { PiVideoCameraLight } from "react-icons/pi";
 import StatusTick from './StatusTick';
 
-function ChatCard({
-    avatar,
-    createdAt,
-    name,
-    lastMessage,
-    type,
-    unseenMessagesCount,
-    _id
-}) {
+function ChatCard(props) {
+    const {
+        avatar,
+        createdAt,
+        name,
+        members,
+        lastMessage,
+        type,
+        unseenMessagesCount,
+        _id
+    } = props
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
 
     function getMessageStatus() {
-        const receipt = lastMessage.receipt
-        if (receipt && user._id == lastMessage.sender) {
-            return receipt.every(item => item.status === 'seen') ? 'seen' :
-                receipt.every(item => item.status === 'received') ? 'received' : 'sent';
+        if (lastMessage) {
+            const receipt = lastMessage.receipt
+            if (receipt && user._id == lastMessage.sender) {
+                return receipt.every(item => item.status === 'seen') ? 'seen' :
+                    receipt.every(item => item.status === 'received') ? 'received' : 'sent';
+            }
         }
     }
 
@@ -32,7 +36,7 @@ function ChatCard({
 
     return (
         <div className='flex cursor-pointer items-start justify-start w-full p-5 hover:bg-gray-50' onClick={() => {
-            dispatch(openChat({ _id, name, avatar }))
+            dispatch(openChat(props))
         }}>
 
             {/** The image */}

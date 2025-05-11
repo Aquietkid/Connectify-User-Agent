@@ -4,12 +4,14 @@ import MessageSender from './MessageSender'
 import Messages from './Messages';
 import { ChatAreaContext } from '../../context/ChatAreaContext';
 import MediaPreviewBeforeSend from './MediaPreviewBeforeSend';
+import { useSelector } from 'react-redux';
 
 function ChatArea() {
     const { preview, fetchAllMessages } = useContext(ChatAreaContext)
+    const { chat } = useSelector(state => state.mainWindow)
 
     useEffect(() => {
-        fetchAllMessages();
+        fetchAllMessages(chat._id);
     }, [])
 
     return (

@@ -11,9 +11,10 @@ const TextMessageSender = ({ startRecording }) => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [text, setText] = useState('')
   const fileInputRef = useRef(null);
-  const { showPreview, preview, sendMessage } = useContext(ChatAreaContext)
+  const { showPreview, preview, sendMessage, startedTyping } = useContext(ChatAreaContext)
 
   function handleTextChange(text) {
+    startedTyping()
     setText(text)
   }
 

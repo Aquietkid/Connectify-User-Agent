@@ -23,7 +23,8 @@ function Profile() {
             userId
         });
         if (res) {
-            dispatch(openChat({ _id: res.data._id, name: data.user.name, avatar: data.user.profilePicture }))
+            const chat = { _id: res.data._id, name: data.user.name, avatar: data.user.profilePicture, type: "personal" }
+            dispatch(openChat(chat))
         }
 
         setLoading(prev => ({ ...prev, chatCreate: false }))
