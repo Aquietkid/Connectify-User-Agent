@@ -7,6 +7,7 @@ import PictureMessage from './PictureMessage';
 
 export default function Messages() {
   const { messages } = useContext(ChatAreaContext);
+  console.log(messages)
 
   return (
     <div className='space-y-2'>

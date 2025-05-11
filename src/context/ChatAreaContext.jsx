@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useRef } from 'react';
 import { getAllMessages, sendMessage as sendMessageApi } from '../api/message';
 import { useSelector } from 'react-redux';
 import socket from '../config/socket';
@@ -10,6 +10,8 @@ const ChatAreaProvider = ({ children }) => {
   const { chat } = useSelector(state => state.mainWindow);
   const user = useSelector(state => state.user);
   const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimer = useRef(null)
 
   function showPreview(type, blob) {
     setPreview({
@@ -54,17 +56,37 @@ const ChatAreaProvider = ({ children }) => {
     }
   }
 
+  function startedTyping() {
+    socket.emit('typing', { chatId: chat._id, userId: user._id })
+  }
+
+
   useEffect(() => {
     socket.emit("joinRoom", { chatId: chat._id, userId: user._id })
 
     socket.on('newMessage', (message) => {
-      console.log('first')
       setMessages(prev => ([...prev, message]))
     })
 
+    socket.on("userTyping", ({ userId }) => {
+      if (chat.type === 'personal') {
+        setIsTyping(true);
+        
+        if (typingTimer.current)
+          clearTimeout(typingTimer.current)
+        
+        typingTimer.current = setTimeout(() => {
+          setIsTyping(false);
+          typingTimer.current = null;
+        }, 2000);
+      }
+    });
+
     return () => {
       socket.off("newMessage");
+      socket.off('userTyping')
     }
+
   }, [])
 
   const contextObject = {
@@ -73,7 +95,9 @@ const ChatAreaProvider = ({ children }) => {
     closePreview,
     fetchAllMessages,
     messages,
-    sendMessage
+    sendMessage,
+    isTyping,
+    startedTyping
   };
 
   return (

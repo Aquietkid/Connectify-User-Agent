@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import searchIcon from '/src/assets/search-glass.svg';
 import avatarImage from '/src/assets/topbar/avatarImage.svg';
 import infoIcon from '/src/assets/topbar/info.svg';
 import { useSelector } from 'react-redux';
 import { PLACEHOLDER_AVATAR } from '../../utils/constants';
+import socket from '../../config/socket';
+import { ChatAreaContext } from '../../context/ChatAreaContext';
 
 const TopBar = () => {
-  const [isTyping, setIsTyping] = useState(true);
+  const { isTyping } = useContext(ChatAreaContext);
   const { chat } = useSelector(state => state.mainWindow)
+  const user = useSelector(state => state.user)
+  const chatMembers = chat.members;
+
+  const subText = (() => {
+    if (chat.type == 'group') {
+      return chatMembers.map(item => item._id != user._id ? item.name : '')
+    }
+  })()
+
   return (
     <div className="relative">
       {/* Border behind the top bar */}
@@ -20,6 +31,7 @@ const TopBar = () => {
           <div className="flex flex-col">
             <span className="font-bold">{chat.name}</span>
             {isTyping && <span className="text-green-600 text-xs">Typing...</span>}
+            {subText && <span className="text-placeholder text-xs">{subText.toString()}</span>}
           </div>
         </div>
         <div className="flex">

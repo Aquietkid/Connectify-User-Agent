@@ -9,6 +9,7 @@ function ContactList() {
         (async () => {
             const res = await getAllChats()
             if (res) {
+                console.log(res.data)
                 setData(res.data)
             }
         })()
