@@ -1,30 +1,25 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import MainWindow from './components/MainWindow'
-import NavSidebar from './components/NavSidebar'
-import ProfilePage from './pages/ProfilePage.jsx'
 import Auth from './components/Auth'
+import Home from './components/Home'
+import _404Page from './components/_404Page'
+import PrivateRoute from './components/PrivateRoute'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/*" element={
-          <>
-            <div className='flex flex-row'>
-              <NavSidebar />
-              <Routes>
-                <Route path="/" element={<MainWindow />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/auth" element={<Auth />} />
-              </Routes>
-            </div>
-          </>
+        <Route path='/signin' element={<Auth />} />
+        <Route path='/signup' element={<Auth />} />
+        <Route path='/' element={
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
         } />
+        <Route path='*' element={<_404Page />} />
       </Routes>
     </Router>
   )
 }
 
-export default App;
+export default App

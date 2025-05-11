@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import api from '../axiosConfig';
+import { setUser } from '../app/userSlice';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../axiosConfig';
-import { setUser, setLoading, setError } from '../store/userSlice';
-import Message from './Message';
+import { useLocation } from 'react-router-dom';
 
 function Auth() {
     const dispatch = useDispatch();
@@ -14,21 +14,13 @@ function Auth() {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
-    const [message, setMessage] = useState({ type: '', text: '' });
 
-    // Debug log for Redux state
-    useEffect(() => {
-        console.log('Current Redux State:', { isAuthenticated, user });
-        console.log('User Name from Redux:', user?.name);
-    }, [isAuthenticated, user]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [timerId, setTimerId] = useState(null);
 
-    // Clear form fields when switching between login and signup
-    useEffect(() => {
-        if (isLogin) {
-            setName('');
-            setProfilePicture(null);
-        }
-    }, [isLogin]);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,53 +33,36 @@ function Auth() {
                     email,
                     password
                 });
-                
-                console.log('Login API Response:', res.data); // Debug log
-                
-                if (res.data.success) {
-                    dispatch(setUser(res.data));
-                    console.log('Dispatched to Redux after login:', res.data); // Debug log
-                    setMessage({ type: 'success', text: 'Login successful!' });
-                    navigate('/');
-                } else {
-                    setMessage({ type: 'error', text: res.data.message });
+
+                const myUser = res.data.data.user;
+                if (myUser) {
+                    dispatch(setUser(myUser));
+                    navigate('/home');
                 }
-            } else {
-                // Signup logic
-                console.log('Attempting signup with:', { name, email, password }); // Debug log
-                
-                const res = await api.post('/user/signup', {
-                    name,
-                    email,
-                    password
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('password', password);
+            if (profilePicture) {
+                formData.append('profilePicture', profilePicture);
+            }
+
+            try {
+                const res = await api.post('/user/signup', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                
-                console.log('Signup API Response:', res.data); // Debug log
-                
-                if (res.data.success) {
-                    if (profilePicture) {
-                        const formData = new FormData();
-                        formData.append('profilePicture', profilePicture);
-                        
-                        await api.post('/user/upload-profile-picture', formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
-                    }
-                    
-                    // Clear form fields
-                    setName('');
-                    setEmail('');
-                    setPassword('');
-                    setProfilePicture(null);
-                    
-                    // Show success message and switch to login
-                    setMessage({ type: 'success', text: 'Account created successfully! Please login with your credentials.' });
-                    setIsLogin(true);
-                } else {
-                    setMessage({ type: 'error', text: res.data.message });
-                }
+                console.log(res.data);
+                setShowPopup(true);
+                const id = setTimeout(() => {
+                    navigate('/login');
+                }, 3000);
+                setTimerId(id);
+            } catch (err) {
+                console.error(err);
             }
         } catch (err) {
             console.error('Auth Error:', err); // Debug log
@@ -99,13 +74,24 @@ function Auth() {
         }
     };
 
-    // If user is authenticated, don't show the auth form
-    if (isAuthenticated) {
-        return null;
-    }
+    const skipRedirect = () => {
+        if (timerId) clearTimeout(timerId);
+        navigate('/signin');
+    };
+
+    useEffect(() => {
+        setIsLogin(location.pathname === '/signin');
+    }, [location.pathname]);
+
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            {showPopup && (
+                <div className="fixed top-5 right-5 bg-green-500 text-white p-4 rounded shadow-lg z-50">
+                    <p>Sign-up successful! Redirecting to login...</p>
+                    <button onClick={skipRedirect} className="mt-2 underline">Go now</button>
+                </div>
+            )}
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-2xl font-bold text-center mb-6">
                     {isLogin ? 'Login' : 'Sign Up'}
@@ -177,7 +163,11 @@ function Auth() {
                 <p className="mt-4 text-center">
                     {isLogin ? "Don't have an account?" : "Already have an account?"}
                     <button
-                        onClick={() => setIsLogin(!isLogin)}
+                        onClick={() => {
+                            setIsLogin(!isLogin);
+                            isLogin ? navigate('/signup') : navigate('/signin');
+                        }
+                        }
                         className="text-blue-500 hover:underline ml-1"
                     >
                         {isLogin ? 'Sign Up' : 'Login'}
