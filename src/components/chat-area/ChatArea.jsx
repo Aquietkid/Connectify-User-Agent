@@ -1,34 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react'
 import TopBar from './TopBar'
 import MessageSender from './MessageSender'
-<<<<<<< HEAD
 import Messages from './Messages';
 import { ChatAreaContext } from '../../context/ChatAreaContext';
 import MediaPreviewBeforeSend from './MediaPreviewBeforeSend';
 import { useSelector } from 'react-redux';
-
-function ChatArea() {
-    const { preview, fetchAllMessages } = useContext(ChatAreaContext)
-    const { chat } = useSelector(state => state.mainWindow)
-
-    useEffect(() => {
-        fetchAllMessages(chat._id);
-=======
-import Messages from './Messages'
 import SkeletonMessage from '../skeleton/SkeletonMessage'
-import { ChatAreaContext } from '../../context/ChatAreaContext'
-import MediaPreviewBeforeSend from './MediaPreviewBeforeSend'
 
 function ChatArea() {
+    const { chat } = useSelector(state => state.mainWindow)
     const { preview, fetchAllMessages, messages } = useContext(ChatAreaContext)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        (async () => {
+        async () => {
             await fetchAllMessages()
             setTimeout(() => setLoading(false), 1000)
-        })()
->>>>>>> 30be348 (Add messages skeleton,friends view page)
+        }
     }, [])
 
     return (
