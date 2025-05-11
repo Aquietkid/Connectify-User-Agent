@@ -32,13 +32,11 @@ const ChatAreaProvider = ({ children }) => {
     setPreview(false)
 
     const formData = new FormData();
-    alert(type)
     formData.append('chatId', chat._id);
     formData.append('text', type == 'audio' ? 'audio-dummy' : text);
     formData.append('type', type);
     if ((blob || preview.blob) && type != 'text') {
       if (type == 'audio') {
-        console.log(blob)
         formData.append('attachment', blob);
       } else {
         formData.append('attachment', preview.blob);

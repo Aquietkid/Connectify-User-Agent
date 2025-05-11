@@ -38,9 +38,6 @@ function Home() {
                             })()
                         }
                     </div>
-                    <ChatAreaProvider>
-                        <MainWindow />
-                    </ChatAreaProvider>
                 </div>
             </div>
         </>

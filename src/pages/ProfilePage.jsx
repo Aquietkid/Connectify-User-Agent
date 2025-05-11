@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import ProfileComponent from '../components/ProfileComponent';
+import Profile from '../components/personal-profile/Profile';
 import Sidebar from '../components/Sidebar';
-import axios from 'axios';
 import { logout } from '../store/userSlice';
 
 const ProfilePage = () => {
@@ -22,31 +21,7 @@ const ProfilePage = () => {
 
     // Make API request to protected endpoint
     useEffect(() => {
-        const fetchProtectedData = async () => {
-            try {
-                // Create a separate axios instance for Postman API
-                const postmanApi = axios.create({
-                    baseURL: 'https://api.getpostman.com',
-                    headers: {
-                        'X-Api-Key': 'PMAK-65c0c0c0c0c0c0c0c0c0c0c0-1234567890abcdef1234567890abcdef1234',
-                        'Accept': 'application/json'
-                    }
-                });
 
-                const response = await postmanApi.get('/me');
-                console.log('Postman /me API Response:', response.data);
-                setMeData(response.data);
-                setError(null);
-            } catch (error) {
-                console.error('Error fetching /me data:', error.response?.data || error.message);
-                setError(error.response?.data || error.message);
-                setMeData(null);
-            }
-        };
-
-        if (accessToken) {
-            fetchProtectedData();
-        }
     }, [accessToken]);
 
     const handleLogout = () => {
@@ -94,7 +69,7 @@ const ProfilePage = () => {
                     )}
                 </div>
 
-                <ProfileComponent isFriend={true} />
+                <Profile isFriend={true} />
             </div>
         </div>
     );

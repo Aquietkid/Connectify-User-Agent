@@ -58,6 +58,7 @@ const VoiceMessageSender = ({ stopRecording }) => {
       if (wavesurfer && blob) {
         wavesurfer.loadBlob(blob);
         setIsPlaybackReady(true);
+        setLatestBlob(blob);
       }
     });
 
@@ -131,6 +132,7 @@ const VoiceMessageSender = ({ stopRecording }) => {
   function handleRestart() {
     setIsPlaybackReady(false);
     setIsPaused(false)
+    setLatestBlob(null)
     setTry(prev => prev + 1)
   }
 
@@ -141,6 +143,7 @@ const VoiceMessageSender = ({ stopRecording }) => {
         blob: latestBlob
       })
     }
+    stopRecording();
   }
 
   return (
@@ -187,8 +190,8 @@ const VoiceMessageSender = ({ stopRecording }) => {
         </button>
       )}
 
-      <button onClick={handleSend}>
-        <Send borderColor='#fff' color='#000' height={50} width={50} />
+      <button onClick={handleSend} disabled={!latestBlob} className='text-black disabled:text-placeholder'>
+        <Send borderColor='#fff' height={50} width={50} />
       </button>
     </div>
   );

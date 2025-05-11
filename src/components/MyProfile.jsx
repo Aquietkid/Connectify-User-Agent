@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { api } from '../axiosConfig';
 
 function MyProfile() {
     const { user } = useSelector(state => state.user);

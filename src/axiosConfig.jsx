@@ -51,4 +51,4 @@ api.interceptors.response.use(
   }
 );
 
-export { api, postmanApi };
+export default api;

@@ -95,7 +95,7 @@ const TextMessageSender = ({ startRecording }) => {
           </button>
           :
           <button onClick={() => handleSend()}>
-            <Send borderColor='#fff' color='#000' height={50} width={50} />
+            <Send color='#000' height={50} width={50} />
           </button>
         }
       </div>

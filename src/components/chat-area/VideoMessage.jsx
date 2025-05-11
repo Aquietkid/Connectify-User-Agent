@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Reply from '../../icons/Reply';
+import replyIcon from '/src/assets/chat-area/reply.svg'
 import { dateToTime } from '../../utils/formatter';
 import StatusTick from '../StatusTick';
 import { generateVideoThumbnail } from 'generate-video-dumbnail';
@@ -48,7 +48,7 @@ export default function VideoMessage({
   if (!thumbnail) return null;
 
   return (
-    <>
+    <div>
       <div className={`flex items-centers gap-2 ${senderMe ? 'flex-row-reverse' : 'flex-row'}`}>
         <div className={`${senderMe ? 'bg-black text-white justify-end' : 'bg-white text-black justify-start'} relative rounded-xl shadow-2xl p-2 max-w-md`}>
           <div className='relative'>
@@ -107,6 +107,6 @@ export default function VideoMessage({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
