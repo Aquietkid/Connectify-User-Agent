@@ -1,12 +1,14 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import { getAllMessages, sendMessage as sendMessageApi } from '../api/message';
 import { useSelector } from 'react-redux';
+import socket from '../config/socket';
 
 export const ChatAreaContext = createContext(undefined);
 
 const ChatAreaProvider = ({ children }) => {
   const [preview, setPreview] = useState(false); // boolean | {type:"image"|"video", blob:Blob}
   const { chat } = useSelector(state => state.mainWindow);
+  const user = useSelector(state => state.user);
   const [messages, setMessages] = useState([]);
 
   function showPreview(type, blob) {
@@ -46,9 +48,24 @@ const ChatAreaProvider = ({ children }) => {
 
     const res = await sendMessageApi(formData)
     if (res) {
-      setMessages([...messages, res.data]); // optimal
+      const newMessage = { ...res.data, sender: user }
+      socket.emit("sendMessage", { chatId: chat._id, message: newMessage })
+      setMessages(prev => ([...prev, newMessage]));
     }
   }
+
+  useEffect(() => {
+    socket.emit("joinRoom", { chatId: chat._id, userId: user._id })
+
+    socket.on('newMessage', (message) => {
+      console.log('first')
+      setMessages(prev => ([...prev, message]))
+    })
+
+    return () => {
+      socket.off("newMessage");
+    }
+  }, [])
 
   const contextObject = {
     preview,

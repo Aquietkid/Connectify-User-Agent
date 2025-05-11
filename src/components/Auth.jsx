@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../axiosConfig';
 import { setUser } from '../app/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function Auth() {
@@ -28,8 +28,8 @@ function Auth() {
                     withCredentials: true
                 });
 
-                const myUser = res.data.data.user;
-                localStorage.setItem("token", res.data.data.token)
+                const myUser = res.data.user;
+                localStorage.setItem("token", res.data.token)
                 if (myUser) {
                     dispatch(setUser(myUser));
                     navigate('/');

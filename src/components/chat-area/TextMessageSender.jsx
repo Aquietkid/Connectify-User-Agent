@@ -40,18 +40,20 @@ const TextMessageSender = ({ startRecording }) => {
     }
   }
 
-  function handleSend() {
+  function handleSend(e) {
+    e.preventDefault();
     const type = !preview ? "text" : preview.type
     if ((text && type == 'text') || type != 'text') {
-    sendMessage({
+      sendMessage({
         text,
         type
       })
+      setText('')
     }
   }
 
   return (
-    <div className="flex justify-between items-center bg-white mt-2">
+    <form onSubmit={handleSend} className="flex justify-between items-center bg-white mt-2">
       {!preview && <div
         onClick={() => fileInputRef.current.click()}
       >
@@ -94,12 +96,12 @@ const TextMessageSender = ({ startRecording }) => {
             <Audio borderColor='#fff' color='#000' height={50} width={50} />
           </button>
           :
-          <button onClick={() => handleSend()}>
+          <button type='submit'>
             <Send color='#000' height={50} width={50} />
           </button>
         }
       </div>
-    </div>
+    </form>
   );
 };
 

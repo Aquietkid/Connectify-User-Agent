@@ -14,7 +14,8 @@ const PrivateRoute = ({ children }) => {
       if (!user._id) {
         setLoading(true);
         const res = await authenticate();
-        dispatch(setUser(res.data))
+        if (res)
+          dispatch(setUser(res.data))
       }
       setLoading(false);
     })()
