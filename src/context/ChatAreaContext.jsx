@@ -28,6 +28,7 @@ const ChatAreaProvider = ({ children }) => {
   async function fetchAllMessages() {
     const res = await getAllMessages(chat._id);
     if (res) {
+      console.log(res)
       setMessages(res.data)
     }
   }

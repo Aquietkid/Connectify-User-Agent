@@ -7,6 +7,7 @@ import { getUserInfo } from '../../api/user';
 import { createPersonalChat } from '../../api/chat';
 import { BsChatDots } from 'react-icons/bs';
 import { openChat } from '../../app/mainWindowSlice';
+import { PLACEHOLDER_AVATAR } from '../../utils/constants';
 
 function Profile() {
     const [data, setData] = useState(null)
@@ -30,6 +31,15 @@ function Profile() {
         setLoading(prev => ({ ...prev, chatCreate: false }))
     }
 
+    function handleChatClick() {
+        if (data.chatId) {
+            const chat = { _id: data.chatId, userId: data.user._id, name: data.user.name, avatar: data.user.profilePicture, type: "personal" }
+            dispatch(openChat(chat))
+        } else {
+            createNewChat()
+        }
+    }
+
     useEffect(() => {
         (async () => {
             setLoading(prev => ({ ...prev, data: true }))
@@ -50,7 +60,7 @@ function Profile() {
                 <div className='flex items-center gap-8 mb-4 pt-4 relative'>
                     <div className='w-40 h-40 rounded-full bg-gray-300 overflow-hidden border-2 border-gray-200'>
                         <img
-                            src='https://example.com/profile-image.jpg'
+                            src={data.user.profilePicture || PLACEHOLDER_AVATAR}
                             alt='Art the Clown'
                             className='w-full h-full object-cover'
                         />
@@ -78,7 +88,7 @@ function Profile() {
                         {data.isFriend ? 'Remove Friend' : 'Request Friend'}
                     </button>
                     <button
-                        onClick={createNewChat}
+                        onClick={handleChatClick}
                         disabled={loading.chatCreate}
                         className='flex items-center gap-2 py-2 px-4 border border-gray-300 rounded-full hover:bg-gray-100 transition text-base disabled:bg-placeholder disabled:animate-pulse'>
                         <BsChatDots size={20} />
@@ -86,9 +96,9 @@ function Profile() {
                     </button>
                 </div>
 
-                {data.isFriend && <Media mediaMessages={data.mediaMessages} />}
+                <Media mediaMessages={data.mediaMessages} />
 
-                <Friends isMembersView={data.isFriend} />
+                {/* <Friends isMembersView={data.isFriend} /> */}
 
                 <CommonGroups commonGroups={data.commonGroups} />
             </div>

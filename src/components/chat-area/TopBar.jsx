@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import searchIcon from '/src/assets/search-glass.svg';
-import avatarImage from '/src/assets/topbar/avatarImage.svg';
-import infoIcon from '/src/assets/topbar/info.svg';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { PLACEHOLDER_AVATAR } from '../../utils/constants';
-import socket from '../../config/socket';
+import { GoInfo } from "react-icons/go";
 import { ChatAreaContext } from '../../context/ChatAreaContext';
+import { openPersonalInfo } from '../../app/mainWindowSlice';
 
 const TopBar = () => {
   const { isTyping } = useContext(ChatAreaContext);
   const { chat } = useSelector(state => state.mainWindow)
   const user = useSelector(state => state.user)
+  const dispatch = useDispatch();
   const { activeUsers } = useSelector(state => state.activeUsers)
   const chatMembers = chat.members; // only if there is group
 
@@ -28,6 +27,14 @@ const TopBar = () => {
       }
     }
     return false
+  }
+
+  function handleInfoClick() {
+    if (chat.type == 'personal') {
+      dispatch(openPersonalInfo(chat.userId))
+    } else {
+
+    }
   }
 
   return (
@@ -48,13 +55,10 @@ const TopBar = () => {
             {subText && <span className="text-placeholder text-xs">{subText.toString()}</span>}
           </div>
         </div>
-        <div className="flex">
-          <div className="mr-2.5">
-            <img src={searchIcon} alt="Search" className="w-5 h-5" />
-          </div>
-          <div>
-            <img src={infoIcon} alt="Info" className="w-5 h-5" />
-          </div>
+        <div className="flex mr-5">
+          <button onClick={handleInfoClick}>
+            <GoInfo size={30} color='#bebebe' />
+          </button>
         </div>
       </div>
     </div>

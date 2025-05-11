@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import { authenticate } from '../api/user'
 import { setUser } from '../app/userSlice'
+import Authenticating from './Authenticating'
 
 const PrivateRoute = ({ children }) => {
   const user = useSelector(state => state.user)
@@ -22,7 +23,7 @@ const PrivateRoute = ({ children }) => {
   }, [])
 
   if (loading) {
-    return <p>Authenticating...</p>
+    return <Authenticating />
   }
 
   return user._id ? children : <Navigate to="/signin" />
