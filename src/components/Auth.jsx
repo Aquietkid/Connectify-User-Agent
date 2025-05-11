@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import api from '../axiosConfig';
-import { setUser } from '../app/userSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { api } from '../axiosConfig';
+import { setUser, setLoading, setError } from '../store/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import Message from './Message'; // Assuming you have this component
 
 function Auth() {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { isAuthenticated, user } = useSelector(state => state.user);
+    const { isAuthenticated, user, loading, error } = useSelector(state => state.user);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
-
     const [showPopup, setShowPopup] = useState(false);
     const [timerId, setTimerId] = useState(null);
+    const [message, setMessage] = useState({ type: '', text: '' });
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -26,46 +24,44 @@ function Auth() {
         e.preventDefault();
         dispatch(setLoading(true));
         setMessage({ type: '', text: '' });
-        
+
         try {
             if (isLogin) {
-                const res = await api.post('/user/signin', {
-                    email,
-                    password
-                });
-
-                const myUser = res.data.data.user;
-                if (myUser) {
-                    dispatch(setUser(myUser));
+                const res = await api.post('/user/signin', { email, password });
+                console.log('Login Response:', res.data); // Debug log
+                if (res.data && res.data.data) {
+                    dispatch(setUser(res.data));
+                    console.log('After dispatch - Auth State:', { isAuthenticated, user }); // Debug log
                     navigate('/home');
+                } else {
+                    throw new Error('Invalid response format');
                 }
-            } catch (err) {
-                console.error(err);
-            }
-        } else {
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('email', email);
-            formData.append('password', password);
-            if (profilePicture) {
-                formData.append('profilePicture', profilePicture);
-            }
+            } else {
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('password', password);
+                if (profilePicture) {
+                    formData.append('profilePicture', profilePicture);
+                }
 
-            try {
                 const res = await api.post('/user/signup', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                console.log(res.data);
-                setShowPopup(true);
-                const id = setTimeout(() => {
-                    navigate('/login');
-                }, 3000);
-                setTimerId(id);
-            } catch (err) {
-                console.error(err);
+
+                if (res.data && res.data.success) {
+                    setMessage({ type: 'success', text: 'Signup successful! Redirecting to login...' });
+                    setShowPopup(true);
+                    const id = setTimeout(() => {
+                        navigate('/signin');
+                    }, 3000);
+                    setTimerId(id);
+                } else {
+                    throw new Error('Signup failed');
+                }
             }
         } catch (err) {
-            console.error('Auth Error:', err); // Debug log
+            console.error('Auth Error:', err);
             const errorMessage = err.response?.data?.message || (isLogin ? 'Login failed' : 'Signup failed');
             setMessage({ type: 'error', text: errorMessage });
             dispatch(setError(errorMessage));
@@ -82,7 +78,6 @@ function Auth() {
     useEffect(() => {
         setIsLogin(location.pathname === '/signin');
     }, [location.pathname]);
-
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -165,9 +160,8 @@ function Auth() {
                     <button
                         onClick={() => {
                             setIsLogin(!isLogin);
-                            isLogin ? navigate('/signup') : navigate('/signin');
-                        }
-                        }
+                            navigate(isLogin ? '/signup' : '/signin');
+                        }}
                         className="text-blue-500 hover:underline ml-1"
                     >
                         {isLogin ? 'Sign Up' : 'Login'}

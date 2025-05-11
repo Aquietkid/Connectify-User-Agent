@@ -1,5 +1,5 @@
 import React from 'react'
-import replyIcon from '/src/assets/chat-area/reply.svg'
+import Reply from '../../icons/Reply'
 import { dateToTime } from '../../utils/formatter'
 import StatusTick from '../StatusTick'
 
@@ -14,7 +14,7 @@ export default function TextMessage() {
         </div>
       </div>
       <div className='flex flex-column items-center relative'>
-        <img src={replyIcon} alt="reply" className={`w-5 aspect-square cursor-pointer ${senderMe ? 'scale-x-[-1]' : ''}`} />
+        <Reply className={`w-5 aspect-square cursor-pointer ${senderMe ? 'scale-x-[-1]' : ''}`} />
         {senderMe &&
           <div className='absolute bottom-0'>
             <StatusTick status="received" />
