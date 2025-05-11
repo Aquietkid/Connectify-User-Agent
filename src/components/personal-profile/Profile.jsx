@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Media from '../Media';
+import { FaRegStar } from "react-icons/fa";
 import Friends from './Friends';
 import CommonGroups from './CommonGroups';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,14 +9,17 @@ import { createPersonalChat } from '../../api/chat';
 import { BsChatDots } from 'react-icons/bs';
 import { openChat } from '../../app/mainWindowSlice';
 import { PLACEHOLDER_AVATAR } from '../../utils/constants';
+import { sendFriendRequest } from '../../api/friendRequest';
 
 function Profile() {
     const [data, setData] = useState(null)
+    const [isFriend, setIsFriend] = useState('not-friend'); // friend | not-friend | requested
     const { userId } = useSelector(state => state.mainWindow)
     const dispatch = useDispatch();
     const [loading, setLoading] = useState({
         data: false,
-        chatCreate: false
+        chatCreate: false,
+        friendRequestSent: false
     });
 
     async function createNewChat() {
@@ -38,6 +42,18 @@ function Profile() {
         } else {
             createNewChat()
         }
+    }
+
+    async function handleFriendRequestClick() {
+        if (isFriend != 'not-friend') return
+        setLoading(prev => ({ ...prev, friendRequestSent: true }))
+        const res = await sendFriendRequest({
+            receiverUserId: data.user._id
+        })
+        if (res) {
+            setIsFriend('requested')
+        }
+        setLoading(prev => ({ ...prev, friendRequestSent: false }))
     }
 
     useEffect(() => {
@@ -80,12 +96,12 @@ function Profile() {
                 {/* Action buttons */}
                 <div className='flex gap-4 mb-4'>
                     <button
-                        className='flex items-center gap-2 py-2 px-4 border border-gray-300 rounded-full hover:bg-gray-100 transition text-base'
+                        disabled={loading.friendRequestSent}
+                        onClick={handleFriendRequestClick}
+                        className='flex items-center gap-2 py-2 px-4 border border-gray-300 rounded-full hover:bg-gray-100 transition text-base disabled:bg-placeholder disabled:animate-pulse'
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                        </svg>
-                        {data.isFriend ? 'Remove Friend' : 'Request Friend'}
+                        <FaRegStar size={20} />
+                        {isFriend == 'friend' ? 'Remove Friend' : isFriend == 'requested' ? 'Request' : 'Request Friend'}
                     </button>
                     <button
                         onClick={handleChatClick}
