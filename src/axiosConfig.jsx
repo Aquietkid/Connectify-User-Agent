@@ -6,6 +6,18 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
+});
+
+// Create a separate instance for Postman API
+const postmanApi = axios.create({
+  baseURL: 'https://api.getpostman.com',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json'
+    // 'X-Api-Key': 'PMAK-65c0c0c0c0c0c0c0c0c0c0c0-1234567890abcdef1234567890abcdef1234' // Replace with your actual Postman API key
+  },
+  withCredentials: false
 });
 
 api.interceptors.request.use(
@@ -30,4 +42,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export { api, postmanApi };

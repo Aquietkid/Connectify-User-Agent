@@ -6,11 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 function Auth() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { isAuthenticated, user } = useSelector(state => state.user);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
+
     const [showPopup, setShowPopup] = useState(false);
     const [timerId, setTimerId] = useState(null);
 
@@ -20,13 +24,14 @@ function Auth() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (isLogin) {
-            try {
+        dispatch(setLoading(true));
+        setMessage({ type: '', text: '' });
+        
+        try {
+            if (isLogin) {
                 const res = await api.post('/user/signin', {
-                    email: email,
+                    email,
                     password
-                }, {
-                    withCredentials: true
                 });
 
                 const myUser = res.data.data.user;
@@ -59,6 +64,13 @@ function Auth() {
             } catch (err) {
                 console.error(err);
             }
+        } catch (err) {
+            console.error('Auth Error:', err); // Debug log
+            const errorMessage = err.response?.data?.message || (isLogin ? 'Login failed' : 'Signup failed');
+            setMessage({ type: 'error', text: errorMessage });
+            dispatch(setError(errorMessage));
+        } finally {
+            dispatch(setLoading(false));
         }
     };
 
@@ -84,6 +96,7 @@ function Auth() {
                 <h2 className="text-2xl font-bold text-center mb-6">
                     {isLogin ? 'Login' : 'Sign Up'}
                 </h2>
+                {message.text && <Message type={message.type} message={message.text} />}
                 <form onSubmit={handleSubmit}>
                     {!isLogin && (
                         <div className="mb-4">
@@ -148,7 +161,7 @@ function Auth() {
                     </button>
                 </form>
                 <p className="mt-4 text-center">
-                    {isLogin ? 'Don’t have an account?' : 'Already have an account?'}
+                    {isLogin ? "Don't have an account?" : "Already have an account?"}
                     <button
                         onClick={() => {
                             setIsLogin(!isLogin);

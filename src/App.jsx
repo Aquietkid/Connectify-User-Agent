@@ -5,7 +5,6 @@ import _404Page from './components/_404Page'
 import PrivateRoute from './components/PrivateRoute'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-
 function App() {
   return (
     <Router>
