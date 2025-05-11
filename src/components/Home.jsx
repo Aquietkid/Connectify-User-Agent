@@ -1,11 +1,15 @@
 import React from 'react'
 
-import MainWindow from './chat-area/MainWindow'
+import ChatArea from './chat-area/ChatArea'
 import NavSidebar from './NavSidebar'
 import Sidebar from './Sidebar'
 import ChatAreaProvider from '../context/ChatAreaContext'
+import Profile from './personal-profile/Profile'
+import { useSelector } from 'react-redux'
+
 
 function Home() {
+    const { type } = useSelector(state => state.mainWindow);
     return (
         <>
             <div className='flex flex-row'>
@@ -15,10 +19,24 @@ function Home() {
                         <Sidebar />
                     </div>
                     <div className="flex-1 overflow-x-auto w-full">
-                        <ChatAreaProvider>
-                            <MainWindow />
-                        </ChatAreaProvider>
-                        {/* <ProfileComponent isFriend={true} /> */}
+                        {
+                            (() => {
+                                switch (type) {
+                                    case "chatArea":
+                                        return (
+                                            <ChatAreaProvider>
+                                                <ChatArea />
+                                            </ChatAreaProvider>
+                                        )
+                                    case "personalInfo":
+                                        return (
+                                            <Profile />
+                                        )
+                                    default:
+                                        return <></>
+                                }
+                            })()
+                        }
                     </div>
                 </div>
             </div>

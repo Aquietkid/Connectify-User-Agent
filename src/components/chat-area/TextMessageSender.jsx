@@ -5,12 +5,13 @@ import Audio from '../../icons/Audio';
 import EmojiPicker from 'emoji-picker-react';
 import Send from '../../icons/Send';
 import { ChatAreaContext } from '../../context/ChatAreaContext';
+import toast from 'react-hot-toast';
 
-const TextMessageSender = () => {
+const TextMessageSender = ({ startRecording }) => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [text, setText] = useState('')
   const fileInputRef = useRef(null);
-  const { showPreview, preview } = useContext(ChatAreaContext)
+  const { showPreview, preview, sendMessage } = useContext(ChatAreaContext)
 
   function handleTextChange(text) {
     setText(text)
@@ -32,12 +33,20 @@ const TextMessageSender = () => {
       } else if (type.startsWith('video/')) {
         mediaType = 'video';
       } else {
-        alert('Only image and video files are allowed.');
+        toast.error('Only image and video files are allowed.');
         return;
       }
-
-      const blob = new Blob([file], { type });
       showPreview(mediaType, file);
+    }
+  }
+
+  function handleSend() {
+    const type = !preview ? "text" : preview.type
+    if ((text && type == 'text') || type != 'text') {
+    sendMessage({
+        text,
+        type
+      })
     }
   }
 
@@ -81,8 +90,13 @@ const TextMessageSender = () => {
       </div>
       <div className='flex justify-center items-center cursor-pointer'>
         {(text.length == 0 && !preview) ?
-          <Audio borderColor='#fff' color='#000' height={50} width={50} />
-          : <Send borderColor='#fff' color='#000' height={50} width={50} />
+          <button onClick={startRecording}>
+            <Audio borderColor='#fff' color='#000' height={50} width={50} />
+          </button>
+          :
+          <button onClick={() => handleSend()}>
+            <Send borderColor='#fff' color='#000' height={50} width={50} />
+          </button>
         }
       </div>
     </div>
