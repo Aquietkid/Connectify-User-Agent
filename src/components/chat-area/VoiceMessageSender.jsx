@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js';
 import Bin from '../../icons/Bin';
@@ -8,8 +8,9 @@ import Send from '../../icons/Send';
 import { FaRegStopCircle } from "react-icons/fa";
 import { IoReloadOutline } from "react-icons/io5";
 import { numberToDuration } from '../../utils/formatter';
+import { ChatAreaContext } from '../../context/ChatAreaContext';
 
-const VoiceMessageSender = () => {
+const VoiceMessageSender = ({ stopRecording }) => {
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
   const recordPluginRef = useRef(null);
@@ -21,6 +22,7 @@ const VoiceMessageSender = () => {
   const [playbackTime, setPlaybackTime] = useState(0);
   const [latestBlob, setLatestBlob] = useState(null);
   const [_try, setTry] = useState(1)
+  const { sendMessage } = useContext(ChatAreaContext)
 
   useEffect(() => {
     if (!waveformRef.current) return;
@@ -132,9 +134,20 @@ const VoiceMessageSender = () => {
     setTry(prev => prev + 1)
   }
 
+  function handleSend() {
+    if (latestBlob) {
+      sendMessage({
+        type: 'audio',
+        blob: latestBlob
+      })
+    }
+  }
+
   return (
     <div className="flex justify-between items-center bg-white mt-2 w-full px-4 py-2 rounded shadow">
-      <Bin borderColor='#fff' color='#000' height={20} width={20} />
+      <button onClick={stopRecording}>
+        <Bin borderColor='#fff' color='#000' height={20} width={20} />
+      </button>
       {/* Playback Controls */}
       {isPlaybackReady && (
         isPlaying ? (
@@ -174,7 +187,7 @@ const VoiceMessageSender = () => {
         </button>
       )}
 
-      <button>
+      <button onClick={handleSend}>
         <Send borderColor='#fff' color='#000' height={50} width={50} />
       </button>
     </div>

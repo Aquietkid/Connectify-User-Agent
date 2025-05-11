@@ -4,7 +4,7 @@ import React from 'react'
 export default function StatusTick({ status }) {
 
   if (status == 'sent') {
-    return <SingleTick />
+    return <SingleTick className='text-placeholder'/>
   } else if (status == 'received') {
     return <DoubleTick className='text-placeholder' />
   } else {

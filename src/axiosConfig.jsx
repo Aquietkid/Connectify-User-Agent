@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const api = axios.create({
   baseURL: 'https://connectify-backend-9zxl.onrender.com',
@@ -22,23 +23,31 @@ const postmanApi = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // You can modify the request config here if needed
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
-    // Handle the error
     return Promise.reject(error);
   }
 );
 
 api.interceptors.response.use(
   (response) => {
-    // You can modify the response here if needed
-    return response;
+
+    if (response.data && response.data.success === false) {
+      toast.error(response.data.message || 'Something went wrong');
+      return null;
+    }
+    return response.data;
   },
   (error) => {
-    // Handle the error
-    return Promise.reject(error);
+
+    const message = error.response?.data?.message || error.message || 'An unexpected error occurred';
+    toast.error(message);
+    return null;
   }
 );
 

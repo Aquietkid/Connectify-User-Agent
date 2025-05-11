@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function ProfileFriendsComponent({ isMembersView }) {
+function Friends({ isMembersView }) {
     const [expanded, setExpanded] = useState(false);
     const toggleImages = () => setExpanded(prev => !prev);
     return (
@@ -74,4 +74,4 @@ function ProfileFriendsComponent({ isMembersView }) {
     );
 }
 
-export default ProfileFriendsComponent;
+export default Friends;

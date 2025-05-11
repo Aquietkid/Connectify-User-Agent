@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Reply from '../../icons/Reply';
+import replyIcon from '/src/assets/chat-area/reply.svg';
 import { dateToTime } from '../../utils/formatter';
 import StatusTick from '../StatusTick';
 import { generateVideoThumbnail } from 'generate-video-dumbnail';
@@ -8,7 +8,7 @@ import Cross from '../../icons/Cross';
 import CrossButton from '../CrossButton';
 import { useSelector } from 'react-redux';
 
-export default function VideoMessage({
+export default function PictureMessage({
   chatId,
   createdAt,
   deleted,
@@ -21,22 +21,9 @@ export default function VideoMessage({
   _id
 }) {
 
-  const [thumbnail, setThumbnail] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const user = useSelector(state => state.user)
   const senderMe = user._id == sender._id
-
-  useEffect(() => {
-    async function getThumbnail() {
-      const thumbnailUrl = await generateVideoThumbnail(link, 3, {
-        format: 'image/jpeg',
-        quality: 0.88,
-      });
-      setThumbnail(thumbnailUrl);
-    }
-
-    getThumbnail();
-  }, []);
 
   function getMessageStatus() {
     if (receipt && senderMe) {
@@ -45,24 +32,18 @@ export default function VideoMessage({
     }
   }
 
-  if (!thumbnail) return null;
-
   return (
     <>
       <div className={`flex items-centers gap-2 ${senderMe ? 'flex-row-reverse' : 'flex-row'}`}>
         <div className={`${senderMe ? 'bg-black text-white justify-end' : 'bg-white text-black justify-start'} relative rounded-xl shadow-2xl p-2 max-w-md`}>
-          <div className='relative'>
+          <div className='relative'
+            onClick={() => setShowModal(true)}
+          >
             <img
-              src={thumbnail}
+              src={link}
               alt="video message thumbnail"
               className="h-[400px] rounded-md bg-placeholder"
             />
-            <div
-              className='bg-black/50 w-full h-full absolute top-0 left-0 rounded-md flex items-center justify-center cursor-pointer opacity-0 hover:opacity-100 transition-opacity duration-300'
-              onClick={() => setShowModal(true)}
-            >
-              <Play width={40} height={40} color='#fff' />
-            </div>
           </div>
           <div className={`flex mt-2 ${senderMe ? 'justify-end' : 'justify-start'}`}>
             <span className="text-placeholder text-xs">{dateToTime(createdAt)}</span>
@@ -103,7 +84,7 @@ export default function VideoMessage({
             />
           </div>
           <div className='flex justify-center h-[90%] p-2'>
-            <video src={link} className='h-full' controls autoPlay />
+            <img src={link} className='h-full' />
           </div>
         </div>
       )}

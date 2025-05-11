@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-function ProfileCommonGroupsComponent({ commonGroups }) {
+function CommonGroups({ commonGroups }) {
     const [expanded, setExpanded] = useState(false);
     const toggleImages = () => setExpanded(prev => !prev);
     return (
@@ -47,4 +47,4 @@ function ProfileCommonGroupsComponent({ commonGroups }) {
     );
 }
 
-export default ProfileCommonGroupsComponent;
+export default CommonGroups;

@@ -26,3 +26,7 @@
 button{
   @apply cursor-pointer focus:outline-none
 }
+
+input {
+  @apply focus:outline-none
+}

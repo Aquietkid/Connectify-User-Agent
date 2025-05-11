@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../axiosConfig';
-import { setUser, setLoading, setError } from '../store/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import Message from './Message'; // Assuming you have this component
+import api from '../axiosConfig';
+import { setUser } from '../app/userSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Auth() {
-    const { isAuthenticated, user, loading, error } = useSelector(state => state.user);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,7 +12,6 @@ function Auth() {
     const [profilePicture, setProfilePicture] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [timerId, setTimerId] = useState(null);
-    const [message, setMessage] = useState({ type: '', text: '' });
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,51 +19,46 @@ function Auth() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(setLoading(true));
-        setMessage({ type: '', text: '' });
+        if (isLogin) {
+            try {
+                const res = await api.post('/user/signin', {
+                    email: email,
+                    password
+                }, {
+                    withCredentials: true
+                });
 
-        try {
-            if (isLogin) {
-                const res = await api.post('/user/signin', { email, password });
-                console.log('Login Response:', res.data); // Debug log
-                if (res.data && res.data.data) {
-                    dispatch(setUser(res.data));
-                    console.log('After dispatch - Auth State:', { isAuthenticated, user }); // Debug log
-                    navigate('/home');
-                } else {
-                    throw new Error('Invalid response format');
+                const myUser = res.data.data.user;
+                localStorage.setItem("token", res.data.data.token)
+                if (myUser) {
+                    dispatch(setUser(myUser));
+                    navigate('/');
                 }
-            } else {
-                const formData = new FormData();
-                formData.append('name', name);
-                formData.append('email', email);
-                formData.append('password', password);
-                if (profilePicture) {
-                    formData.append('profilePicture', profilePicture);
-                }
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('password', password);
+            if (profilePicture) {
+                formData.append('profilePicture', profilePicture);
+            }
 
+            try {
                 const res = await api.post('/user/signup', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-
-                if (res.data && res.data.success) {
-                    setMessage({ type: 'success', text: 'Signup successful! Redirecting to login...' });
-                    setShowPopup(true);
-                    const id = setTimeout(() => {
-                        navigate('/signin');
-                    }, 3000);
-                    setTimerId(id);
-                } else {
-                    throw new Error('Signup failed');
-                }
+                console.log(res.data);
+                setShowPopup(true);
+                const id = setTimeout(() => {
+                    navigate('/signin');
+                }, 3000);
+                setTimerId(id);
+            } catch (err) {
+                console.error(err);
             }
-        } catch (err) {
-            console.error('Auth Error:', err);
-            const errorMessage = err.response?.data?.message || (isLogin ? 'Login failed' : 'Signup failed');
-            setMessage({ type: 'error', text: errorMessage });
-            dispatch(setError(errorMessage));
-        } finally {
-            dispatch(setLoading(false));
         }
     };
 
@@ -80,18 +72,17 @@ function Auth() {
     }, [location.pathname]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-white">
             {showPopup && (
-                <div className="fixed top-5 right-5 bg-green-500 text-white p-4 rounded shadow-lg z-50">
+                <div className="fixed top-5 right-5 bg-black text-white p-4 rounded shadow-lg z-50">
                     <p>Sign-up successful! Redirecting to login...</p>
                     <button onClick={skipRedirect} className="mt-2 underline">Go now</button>
                 </div>
             )}
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h2 className="text-2xl font-bold text-center mb-6">
+            <div className="bg-white p-8 rounded-lg shadow-md w-96 border border-gray-200">
+                <h2 className="text-2xl font-bold text-center mb-6 text-black">
                     {isLogin ? 'Login' : 'Sign Up'}
                 </h2>
-                {message.text && <Message type={message.type} message={message.text} />}
                 <form onSubmit={handleSubmit}>
                     {!isLogin && (
                         <div className="mb-4">
@@ -104,7 +95,7 @@ function Auth() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
-                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                                className="mt-1 block w-full p-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-black text-black"
                             />
                         </div>
                     )}
@@ -118,7 +109,7 @@ function Auth() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                            className="mt-1 block w-full p-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-black text-black"
                         />
                     </div>
                     <div className="mb-4">
@@ -131,7 +122,7 @@ function Auth() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                            className="mt-1 block w-full p-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-black text-black"
                         />
                     </div>
                     {!isLogin && (
@@ -144,25 +135,25 @@ function Auth() {
                                 id="profilePicture"
                                 accept="image/*"
                                 onChange={(e) => setProfilePicture(e.target.files[0])}
-                                className="mt-1 block w-full text-sm text-gray-500"
+                                className="mt-1 block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800"
                             />
                         </div>
                     )}
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-200"
+                        className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition duration-200 font-medium"
                     >
                         {isLogin ? 'Login' : 'Sign Up'}
                     </button>
                 </form>
-                <p className="mt-4 text-center">
-                    {isLogin ? "Don't have an account?" : "Already have an account?"}
+                <p className="mt-4 text-center text-gray-700">
+                    {isLogin ? `Don't have an account?` : 'Already have an account?'}
                     <button
                         onClick={() => {
                             setIsLogin(!isLogin);
-                            navigate(isLogin ? '/signup' : '/signin');
+                            isLogin ? navigate('/signup') : navigate('/signin');
                         }}
-                        className="text-blue-500 hover:underline ml-1"
+                        className="text-black hover:underline ml-1 font-medium"
                     >
                         {isLogin ? 'Sign Up' : 'Login'}
                     </button>

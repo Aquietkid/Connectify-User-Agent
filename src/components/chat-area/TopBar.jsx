@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import searchIcon from '/src/assets/search-glass.svg';
 import avatarImage from '/src/assets/topbar/avatarImage.svg';
 import infoIcon from '/src/assets/topbar/info.svg';
+import { useSelector } from 'react-redux';
+import { PLACEHOLDER_AVATAR } from '../../utils/constants';
 
-const TopBar = ({ contactName, isTyping }) => {
+const TopBar = () => {
+  const [isTyping, setIsTyping] = useState(true);
+  const { chat } = useSelector(state => state.mainWindow)
   return (
     <div className="relative">
       {/* Border behind the top bar */}
@@ -12,10 +16,10 @@ const TopBar = ({ contactName, isTyping }) => {
       {/* Top bar */}
       <div className="flex justify-between items-center bg-white border border-[#eaeaea] rounded-[10px] p-2.5 h-20 relative z-10">
         <div className="flex items-center">
-          <img src={avatarImage} alt="Avatar" className="w-[50px] h-[50px] rounded-full mr-2.5" />
+          <img src={chat.avatar || PLACEHOLDER_AVATAR} alt="Avatar" className="w-[50px] h-[50px] rounded-full mr-2.5" />
           <div className="flex flex-col">
-            <span className="font-bold">{contactName}</span>
-            {isTyping && <span className="text-green-600">Typing...</span>}
+            <span className="font-bold">{chat.name}</span>
+            {isTyping && <span className="text-green-600 text-xs">Typing...</span>}
           </div>
         </div>
         <div className="flex">

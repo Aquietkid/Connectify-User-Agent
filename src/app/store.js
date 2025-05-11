@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-// import chatCardsReducer from './chatCardsSlice'
-import userReducer from '../store/userSlice'
+import userReducer from './userSlice'
+import mainWindowReducer from './mainWindowSlice'
 
 export const store = configureStore({
   reducer: {
-    // chatCards: chatCardsReducer
     user: userReducer,
+    mainWindow: mainWindowReducer
   }
 })

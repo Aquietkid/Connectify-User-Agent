@@ -1,24 +1,41 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import Search from '../icons/Search'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import searchGlass from '/src/assets/search-glass.svg'
+import SelectUserModal from './SelectUserModal'
+import { openPersonalInfo } from '../app/mainWindowSlice'
 
 function UserCard() {
-  const { user } = useSelector(state => state.user)
+  const user = useSelector(state => state.user)
+  const [modal, setModal] = useState(false);
+  const dispatch = useDispatch();
 
   if (!user) return null
 
   return (
-    <div className='flex flex-col items-start justify-start'>
-      <div className='flex flex-row items-start justify-start mt-10.25 ml-5.75'>
-        <img src={user.profilePicture || 'src/assets/alex.png'} alt="profile picture" className='h-12.5 w-12.5' />
-        <div className='flex flex-col ml-2.5'>
-          <h2 className='font-bold text-xl text-ellipsis'>{user.name}</h2>
-          <p className='text-sm text-[#b3b3b3]'>{user.email}</p>
+    <>
+      <div className='flex flex-col items-start justify-start p-4'>
+        <div className='flex flex-row items-start justify-between w-full'>
+          <div className='flex items-center gap-2'>
+            <img src={user.image || 'src/assets/alex.png'} alt="profile picture" className='h-12.5 w-12.5' />
+            <div className='flex flex-col ml-2.5'>
+              <h2 className='font-bold text-xl text-ellipsis'>{user.name}</h2>
+              <p className='text-sm text-[#b3b3b3]'>{user.email}</p>
+            </div>
+          </div>
+
+          <img src={searchGlass} alt='search glass icon' className='ml-2.5 mt-3 cursor-pointer' onClick={() => setModal(true)} />
         </div>
-        <Search className='ml-2.5 mt-3 w-5 h-5' />
+        <hr className='m-auto w-full mt-5 h-0.25 border-t border-[#eaeaea]' />
       </div>
-      <hr className='m-auto w-[90%] mt-5 h-0.25 border-t border-[#eaeaea]' />
-    </div>
+      {modal && <SelectUserModal
+        mode="personal"
+        onClose={() => setModal(false)}
+        onNext={(_id) => {
+          dispatch(openPersonalInfo(_id))
+          setModal(false)
+        }}
+      />}
+    </>
   )
 }
 
