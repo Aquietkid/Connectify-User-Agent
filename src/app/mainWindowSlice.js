@@ -8,7 +8,7 @@ const initialState = {
 }
 
 const mainWindowSlice = createSlice({
-  name: 'user',
+  name: 'mainWindow',
   initialState,
   reducers: {
     openPersonalInfo(state, action) {

@@ -5,18 +5,44 @@ import NavSidebar from './NavSidebar'
 import Sidebar from './Sidebar'
 import ChatAreaProvider from '../context/ChatAreaContext'
 import Profile from './personal-profile/Profile'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import socket from '../config/socket'
+import { setActiveUsers, userJoined, userLeft } from '../app/activeUsersSlice'
+import { getActiveUsers } from '../api/user'
 
 
 function Home() {
     const { type } = useSelector(state => state.mainWindow);
+    const dispatch = useDispatch();
     const user = useSelector(state => state.user)
+
+    useEffect(() => {
+        async function fetchActiveUsers() {
+            const res = await getActiveUsers()
+            if (res) {
+                dispatch(setActiveUsers(res.data))
+            }
+        }
+        fetchActiveUsers()
+    }, [])
 
     useEffect(() => {
         if (socket) {
             // this must be emitted to notify backend that i am online
             socket.emit("active", { userId: user._id });
+
+            socket.on("userJoined", (userId) => {
+                dispatch(userJoined(userId))
+            })
+
+            socket.on("userLeft", (userId) => {
+                dispatch(userLeft(userId))
+            })
+
+            return () => {
+                socket.off("userJoined")
+                socket.off("userLeft")
+            }
         }
     }, [socket])
 

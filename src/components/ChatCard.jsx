@@ -21,6 +21,7 @@ function ChatCard(props) {
     } = props
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
+    const { activeUsers } = useSelector(state => state.activeUsers)
 
     function getMessageStatus() {
         if (lastMessage) {
@@ -32,15 +33,40 @@ function ChatCard(props) {
         }
     }
 
+    function checkOnline() {
+        if (type == 'personal') {
+            // guarantee only two members
+            const userId = members.find(item => item.id != user._id)._id
+            if (activeUsers.includes(userId)) {
+                return true;
+            }
+        }
+        return false
+    }
+
+    function handleClick() {
+        const chat = { _id: props._id, name: props.name, avatar: props.avatar, type: props.type }
+
+        if (props.type == 'personal') {
+            const userId = members.find(item => item.id != user._id)._id
+            chat.userId = userId
+        } else {
+            chat.members = props.members // for group
+        }
+
+        dispatch(openChat(chat))
+    }
+
     const tick = getMessageStatus() || '';
 
     return (
-        <div className='flex cursor-pointer items-start justify-start w-full p-5 hover:bg-gray-50' onClick={() => {
-            dispatch(openChat(props))
-        }}>
+        <div className='flex cursor-pointer items-start justify-start w-full p-5 hover:bg-gray-50' onClick={handleClick}>
 
             {/** The image */}
-            <img src={avatar || PLACEHOLDER_AVATAR} alt="profile picture" className='w-[50px] rounded-full' />
+            <div className='relative'>
+                <img src={avatar || PLACEHOLDER_AVATAR} alt="profile picture" className='w-[50px] rounded-full' />
+                {checkOnline() && <div className='bg-green-600 rounded-full w-2 aspect-square border border-white absolute left-1 bottom-1' />}
+            </div>
 
             {/** The center section */}
             <div className='flex flex-col ml-2.5 w-[60%]'>

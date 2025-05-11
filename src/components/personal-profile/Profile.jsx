@@ -23,7 +23,7 @@ function Profile() {
             userId
         });
         if (res) {
-            const chat = { _id: res.data._id, name: data.user.name, avatar: data.user.profilePicture, type: "personal" }
+            const chat = { _id: res.data._id, userId: data.user._id, name: data.user.name, avatar: data.user.profilePicture, type: "personal" }
             dispatch(openChat(chat))
         }
 
