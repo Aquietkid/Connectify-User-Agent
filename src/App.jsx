@@ -8,6 +8,7 @@ import FriendRequests from './components/FriendRequests'
 import MyProfile from './components/MyProfile'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import GroupProfile from './components/group-profile/GroupProfile'
 
 function App() {
   const { isAuthenticated } = useSelector(state => state.user);
@@ -35,6 +36,11 @@ function App() {
         <Route path='/my-profile' element={
           <PrivateRoute>
             <MyProfile />
+          </PrivateRoute>
+        } />
+        <Route path='/group-profile' element={
+          <PrivateRoute>
+            <GroupProfile />
           </PrivateRoute>
         } />
         <Route path='/friend-requests' element={

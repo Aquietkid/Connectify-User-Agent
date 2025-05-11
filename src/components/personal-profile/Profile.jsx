@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Media from './Media';
+import Media from '../Media';
 import Friends from './Friends';
 import CommonGroups from './CommonGroups';
 import { useDispatch, useSelector } from 'react-redux';
